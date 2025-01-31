@@ -1,0 +1,120 @@
+# Pthreads Matrix Multiplication Server
+Here’s the README.md for your project in markdown format:
+
+# Pthreads Matrix Multiplication Server
+
+This project implements a multi-threaded server in C, which utilizes pthreads to handle multiple client requests concurrently. It demonstrates the use of thread pools, read-write locks, and analytics collection to handle string manipulation requests from clients.
+
+## Features
+
+- **Thread Pool:** Uses a thread pool to handle multiple client requests concurrently.
+- **Read-Write Locking:** Implements a read-write lock to synchronize access to shared data between reader and writer threads.
+- **Analytics:** Collects performance analytics of the server, such as response times for handling client requests.
+- **Dynamic Client Handling:** Handles multiple clients concurrently with non-blocking I/O operations.
+
+## Files
+
+- **`server_util.h`**: Contains utility functions for managing the thread pool, read-write locks, and task handling.
+- **`server.c`**: The main server logic that handles client requests, manages connections, and utilizes the thread pool for concurrent processing.
+- **`Makefile`**: The build configuration for compiling and linking the server, client, and attacker programs.
+- **`common.h`**: Includes the structure and shared constants for communication and server operations.
+- **`timer.h`**: Utility for timing and measuring request processing times.
+
+## Compilation and Running
+
+### Build the project
+
+To compile the project, run the following command in your terminal:
+
+```bash
+make
+```
+
+This will build the server, client, and attacker programs.
+
+## Run the Server
+
+To run the server, use:
+
+make runserver ARGS=<num_strings> <server_ip> <port>
+
+For example:
+
+   make runserver ARGS=100 127.0.0.1 8000
+
+This starts the server with 100 strings and binds it to IP 127.0.0.1 on port 8000.
+
+## Run the Client
+
+To run the client, use:
+
+make runclient
+
+This will start a client that connects to the server at 127.0.0.1 on port 8000 and interacts with it.
+
+## Run the Attacker
+
+To run the attacker simulation, use:
+
+make runattacker
+
+This will start the attacker program to simulate malicious requests to the server.
+
+## Architecture
+
+### Read-Write Lock
+
+A read-write lock is used to manage concurrent access to the shared array of strings. Multiple readers can access the data simultaneously, but if a writer is modifying the data, all readers and writers are blocked until the writer completes. This is implemented with pthread_cond_t and pthread_mutex_t.
+
+### Thread Pool
+
+A thread pool is used to manage a fixed number of worker threads that handle incoming client requests. The thread pool efficiently assigns tasks to available threads and ensures that resources are used optimally.
+
+### Client Request
+
+Clients can either request to read or write to a string in the array. Each request is handled by a worker thread, which acquires the necessary lock (read or write) before performing the operation.
+
+## Dependencies
+	•	gcc: The GNU Compiler Collection for compiling the C code.
+	•	pthread: For managing multiple threads in the application.
+	•	socket: For handling client-server communication over the network.
+
+## Debugging
+
+You can enable debugging messages by modifying the DEBUG macro in the server_util.h file. Set DEBUG to 1 to enable logging of lock and thread activities.
+
+## License
+
+This project contains code from the University of Alberta Faculty of ECE, completed by Timmy Ifidon
+This `README.md` explains the project structure, build instructions, and the key concepts used in the server's design, such as the read-write lock and thread pool.
+
+
+# Initial Read Me: Uofa Faculty of ECE 
+Read me for ECE 420 Lab2 Script Kit
+Jan. 2019
+
+Content
+=====
+1. demo/simpleClient.c 
+   demo/simpleServer.c  
+   ** A demo code for the client server communication system  
+----
+2. demo/arrayRW.c       
+   ** A demo for the multi-threaded read and write with given API
+----
+3. client.c             
+   ** The provided client code in order to test the server speed
+----
+4. attacker.c           
+   ** The provided client code in order to veriy the correctness of the data consistency
+----
+5. common.h
+   ** Provided server tools for message parsing, data read and write and saving the times
+----
+6. timer.h
+   ** Macro definition for the time measurement 
+----
+7. test.sh
+   ** A shell script showing you how to run your client 100 times.
+=====
+Please also find the detailed instructions in the comments of the individual files.
