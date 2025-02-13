@@ -161,11 +161,11 @@ void addTaskToPool(ThreadPool *pool, Task *task) {
 }
 
 Task* getTaskFromPool(ThreadPool *pool) {
-    
+    //TO BE CALLED ONLY INSIDE CRITICAL SECTION OF THREAD FUNCTION
     Task *task = pool->firstOut;
     pool->firstOut = task->nextTask;
     
-    if (pool->firstOut == NULL) {
+    if (pool->firstOut == NULL) { // pool is now empty 
         pool->lastIn = NULL; 
     }
     

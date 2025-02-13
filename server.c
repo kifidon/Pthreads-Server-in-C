@@ -12,8 +12,8 @@
 // #define MAX_CLIENTS 100
 #define BUFFER_SIZE 256             // MAX SIZE OF MESSAGE 
 #define STRING_SIZE 100             // MAX STRING SIZE IN ARRAY
-#define PORT 8000                  // DEFAULT PORT 
-#define SAVE_POINT 1000              // SAVES EVERY 100 REQUESTS
+#define PORT 8000                   // DEFAULT PORT 
+#define SAVE_POINT 1000             // SAVES EVERY 1000 REQUESTS
 #define DEFUALT_NUM_STRINGS 100
 
 
@@ -39,9 +39,7 @@ int main(int argc, char *argv[]) {
     // init Read Write Locks 
     initRW(&rw);
     if (argc != 4) {
-        if(DEBUG){
-            fprintf(stderr, "Usage: %s <Number of Strings>\n", argv[0]);
-        }
+        fprintf(stderr, "Usage: %s <arraySize> <host> <port>\n", argv[0]);
         exit(EXIT_FAILURE);
     }
     //init analytics struct 
@@ -121,6 +119,7 @@ int main(int argc, char *argv[]) {
         if (requestCount%SAVE_POINT == 0){
             pthread_mutex_lock(&(pool->lock));
             saveTimes(anyt->time, anyt->length);
+            memset(anyt->time, 0, sizeof(double)*SAVE_POINT);
             pthread_mutex_unlock(&(pool->lock));
         }
     }
@@ -209,7 +208,7 @@ void handle_client(void *client_socket) {
     GET_TIME(end);
 
     pthread_mutex_lock(&(pool->lock));
-    anyt->time[anyt->length] = (end-start); //convert to microseconds 
+    anyt->time[anyt->length] = (end-start);
     anyt->length++;
     anyt->length %= SAVE_POINT;
     pthread_mutex_unlock(&(pool->lock));
